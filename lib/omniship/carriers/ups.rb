@@ -339,14 +339,32 @@ module Omniship
                 end
               }
             end
-            xml.LabelSpecification {
-              xml.LabelPrintMethod {
-                xml.Code 'GIF'
-              }
-              xml.LabelImageFormat {
-                xml.Code 'PNG'
-              }
+          }
+
+          xml.LabelSpecification {
+
+            label_specification = options[:label_specification] || {
+              image_format_code: 'GIF',
+              print_method_code: 'GIF',
+              stock_size: {}
             }
+
+            xml.LabelPrintMethod {
+              xml.Code label_specification[:print_method_code]
+            }
+
+            xml.LabelImageFormat {
+              if label_specification[:print_method_code] == 'GIF'
+                xml.Code label_specification[:image_format_code]
+              end
+            }
+
+            if label_specification[:stock_size].values_at(:height, :width).all?
+              xml.LabelStockSize {
+                xml.Height label_specification[:stock_size][:height]
+                xml.Width label_specification[:stock_size][:width]
+              }
+            end
           }
         }
       end
