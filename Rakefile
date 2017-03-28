@@ -21,6 +21,12 @@ namespace :test do
     t.pattern = 'test/remote/*_test.rb'
     t.verbose = true
   end
+
+  Rake::TestTask.new(:stable) do |t|
+    t.libs      << "test"
+    t.test_files = FileList["test/unit/*_test.rb", "test/unit/carriers/ups_test.rb"]
+    t.verbose    = true
+  end
 end
 
 desc "Default Task"
