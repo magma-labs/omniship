@@ -108,9 +108,12 @@ module Omniship #:nodoc:
     end
 
     def determine_dimensions(values)
-      values.reject!(&:blank?)
-
-      values = [0, 0, 0] if values.empty?
+      if values.nil? || values.reject(&:blank?).nil?
+        return Array.new(
+          3,
+          attribute_from_metric_or_imperial(0, Length, :centimetres, :inches)
+        )
+      end
 
       values.map! do |dimension|
         if dimension.respond_to?(:unit)
@@ -148,10 +151,10 @@ module Omniship #:nodoc:
 
     def measure(measurement, ary)
       case measurement
-      when Fixnum then ary[measurement] 
-      when :x, :max, :length, :long then ary[2]
+      when Fixnum then ary[measurement]
+      when :x, :max, :length, :long then ary[0]
       when :y, :mid, :width, :wide then ary[1]
-      when :z, :min, :height,:depth,:high,:deep then ary[0]
+      when :z, :min, :height,:depth,:high,:deep then ary[2]
       when :girth, :around,:circumference
         self.cylinder? ? (Math::PI * (ary[0] + ary[1]) / 2) : (2 * ary[0]) + (2 * ary[1])
       when :volume then self.cylinder? ? (Math::PI * (ary[0] + ary[1]) / 4)**2 * ary[2] : measure(:box_volume,ary)
