@@ -1,4 +1,20 @@
 #!/usr/bin/env ruby
+
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter "_test.rb"
+
+    add_group "Base", "lib/omniship"
+    add_group "Vendor Overrides", "lib/vendor/**/*"
+  end
+end
+
+unless ENV['CI']
+  require 'dotenv'
+  Dotenv.load('.env.test')
+end
+
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 
 require 'rubygems'
@@ -9,11 +25,6 @@ rescue Bundler::BundlerError => e
   $stderr.puts e.message
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
-end
-
-unless ENV['CI']
-  require 'dotenv'
-  Dotenv.load('.env.test')
 end
 
 require 'rails/all'
