@@ -16,6 +16,11 @@ module Omniship
       @last_request = nil
       @test_mode = @options[:test]
 			@config = Omniship.setup
+      @logger = options[:logger] || ::Logger.new($stdout)
+    end
+
+    def log(message)
+      @logger << message
     end
 
     # Override to return required keys in options hash for initialize method.

@@ -614,7 +614,7 @@ module Omniship
       success = response_success?(xml)
       message = response_message(xml)
 
-      puts "response :" + xml.to_s
+      log "response :" + xml.to_s
 
       if success
         tracking_number, origin, destination = nil
@@ -635,8 +635,8 @@ module Omniship
           end
         end
 
-        puts 'tracking_number: ' + tracking_number
-        puts 'estimated_delivery_date: ' + estimated_delivery_date.to_s
+        log 'tracking_number: ' + tracking_number
+        log 'estimated_delivery_date: ' + estimated_delivery_date.to_s
 
         activities = []
         xml.xpath('/*/Shipment/Package/Activity').each do |activity|
@@ -773,7 +773,7 @@ module Omniship
 
     def parse_ship_accept_response(response, options={})
       xml = Nokogiri::XML(response)
-      puts xml
+      log xml
       success = response_success?(xml)
       @response_text = {}
 
@@ -850,7 +850,7 @@ module Omniship
 
     def parse_ship_valid_address(response, options={})
       xml = Nokogiri::XML(response)
-      puts xml
+      log xml
       success = response_success?(xml)
       response_text = Array.new
       if success
