@@ -23,14 +23,16 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'nokogiri', '~> 1.6', '>= 1.6.6.2'
 
 
+  s.add_development_dependency 'dotenv', '~> 2.2.0'
   s.add_development_dependency 'minitest', '~> 5.9.0'
   s.add_development_dependency 'minitest-line', '~> 0.6.3'
   s.add_development_dependency 'minitest-reporters', '~> 1.1.9'
   s.add_development_dependency 'pry-byebug'
   s.add_development_dependency 'rake', '~> 10.4', '>= 10.4.2'
   s.add_development_dependency 'mocha', '~> 1.1', '>= 1.1.0'
-  # s.add_development_dependency 'railties', '~> 4.2', '>= 4.2'
   s.add_development_dependency 'rails', '~> 4.2', '>= 4.2'
+  s.add_development_dependency "vcr"
+  s.add_development_dependency "webmock"
 
   s.files        = Dir.glob("lib/**/*") + %w(MIT-LICENSE README.markdown CHANGELOG)
   s.require_path = 'lib'

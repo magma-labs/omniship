@@ -6,3 +6,4 @@ sample.rb
 pkg
 .dotest
 Gemfile.lock
+.env*

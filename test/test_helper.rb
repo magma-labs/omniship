@@ -10,6 +10,8 @@ rescue Bundler::BundlerError => e
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
+
+require 'dotenv'
 require 'rails/all'
 require 'minitest/autorun'
 require 'minitest/spec'
@@ -17,6 +19,15 @@ require 'minitest/reporters'
 require 'omniship'
 require 'mocha/setup'
 require 'pry-byebug'
+require 'vcr'
+require 'webmock/minitest'
+
+Dotenv.load('.env.test')
+
+VCR.configure do |config|
+  config.cassette_library_dir = "test/vcr_cassettes"
+  config.hook_into :webmock
+end
 
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(:color => true)]
 
