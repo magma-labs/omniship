@@ -11,7 +11,11 @@ rescue Bundler::BundlerError => e
   exit e.status_code
 end
 
-require 'dotenv'
+unless ENV['CI']
+  require 'dotenv'
+  Dotenv.load('.env.test')
+end
+
 require 'rails/all'
 require 'minitest/autorun'
 require 'minitest/spec'
@@ -22,7 +26,6 @@ require 'pry-byebug'
 require 'vcr'
 require 'webmock/minitest'
 
-Dotenv.load('.env.test')
 
 VCR.configure do |config|
   config.cassette_library_dir = "test/vcr_cassettes"
