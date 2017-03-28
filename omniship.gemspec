@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'active_utils',  '~> 3.0', '>= 3.0.0'
   s.add_runtime_dependency 'nokogiri',      '~> 1.6', '>= 1.6.6.2'
 
+  s.add_development_dependency 'coveralls',          '~> 0.8.19'
   s.add_development_dependency 'dotenv',             '~> 2.2.0'
   s.add_development_dependency 'minitest',           '~> 5.9.0'
   s.add_development_dependency 'minitest-line',      '~> 0.6.3'
@@ -29,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'pry-byebug'
   s.add_development_dependency 'rails',              '~> 4.2', '>= 4.2'
   s.add_development_dependency 'rake',               '~> 10.4', '>= 10.4.2'
-  s.add_development_dependency 'simplecov',          '~> 0.14.1'
+  s.add_development_dependency 'simplecov',          '~> 0.12.0'
   s.add_development_dependency 'vcr'
   s.add_development_dependency 'webmock'
 

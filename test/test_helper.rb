@@ -1,12 +1,16 @@
 #!/usr/bin/env ruby
 
 if ENV['COVERAGE']
+  require 'coveralls'
   require 'simplecov'
-  SimpleCov.start do
-    add_filter "_test.rb"
 
-    add_group "Base", "lib/omniship"
-    add_group "Vendor Overrides", "lib/vendor/**/*"
+  Coveralls.wear!
+
+  SimpleCov.start do
+    add_filter '_test.rb'
+
+    add_group 'Base', 'lib/omniship'
+    add_group 'Vendor Overrides', 'lib/vendor/**/*'
   end
 end
 

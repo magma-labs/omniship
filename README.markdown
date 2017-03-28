@@ -1,22 +1,23 @@
-[![Gem Version](https://badge.fury.io/rb/omniship.png)](http://badge.fury.io/rb/omniship) [![Code Climate](https://codeclimate.com/github/Digi-Cazter/omniship.png)](https://codeclimate.com/github/Digi-Cazter/omniship) [![Build Status](https://travis-ci.org/Digi-Cazter/omniship.svg)](https://travis-ci.org/Digi-Cazter/omniship)
-
 # Omniship
 
-Update 9/21/2015 - I have started working on the 1.0.0 release for this gem, this will include a complete test suite as well as UPS, FedEx, and USPS full integeration 1-to-1 with all basic features of these carriers.  After this release, then I'll get into developing out the more advanced features of these carriers which will include full support for international shipping. If you wish to provide a suggestion for more carriers, please create an issue with the "feature" tag.
+[![build-status](https://app.wercker.com/status/d331d9c12c15c6a20ddf774724247270/s/master "wercker status")](https://app.wercker.com/magma/omniship/runs?view=runs&q=branch:master)
 
-This gem is under active development, I'm only in the Alpha stage right now, so keep checking back for updates.
+[![coverage-status](https://coveralls.io/repos/github/magma-labs/omniship/badge.svg)](https://coveralls.io/github/magma-labs/omniship)
 
-This library has been created to make web requests to common shipping carriers using XML.  I created this to be easy to use with a nice Ruby API.  This code was originally forked from the *Shopify/active_shipping* code, I began to strip it down cause I wan't a cleaner API along with the ability to actually create shipment labels with it.  After changing enough code, I created this gem as its own project since it's different enough.
+A fork of Digi-Cazter/omniship:
+
+> This library has been created to make web requests to common shipping carriers using XML.  I created this to be easy to use with a nice Ruby API.  This code was originally forked from the *Shopify/active_shipping* code, I began to strip it down cause I wan't a cleaner API along with the ability to actually create shipment labels with it.  After changing enough code, I created this gem as its own project since it's different enough.
+
 
 ## Supported Shipping Carriers
 
-* [UPS](http://www.ups.com)
+* [UPS](http://www.ups.com) (Stable)
   - Create Shipment
   - Void Shipment
   - Get Rates
   - Validate Address
   - Validate Address with Street
-* [FedEx](http://www.fedex.com) (These listed features work, but still need more options added)
+* [FedEx](http://www.fedex.com) (Unverified)
   - Create Shipment
   - Void Shipment
   - Get Rates
@@ -80,31 +81,7 @@ into create_shipment and accept_shipment.
       return pkg_list
     end
 
-## Tests
 
-Currently this is on my TODO list. Check back for updates
-
-## Change Log
-**0.4.5**
-* Bug fixes for UPS
-* Updated syntax for gemspec
-* Updated dependencies
-
-**0.4.1**
-* Bug fixes for dependencies
-
-## Contributing
-
-Before anyone starts contributing, I want to get a good stable version going and tests to follow, after I get that going then for the features you add, you should have both unit tests and remote tests. It's probably best to start with the remote tests, and then log those requests and responses and use them as the mocks for the unit tests.
-
-To log requests and responses, just set the `logger` on your carrier class to some kind of `Logger` object:
-
-    Omniship::USPS.logger = Logger.new($stdout)
-
-(This logging functionality is provided by the [`PostsData` module](https://github.com/Shopify/active_utils/blob/master/lib/active_utils/common/posts_data.rb) in the `active_utils` dependency.)
-
-After you've pushed your well-tested changes to your github fork, make a pull request and we'll take it from there!
-
-## Legal Mumbo Jumbo
+## License
 
 Unless otherwise noted in specific files, all code in the Omniship project is under the copyright and license described in the included MIT-LICENSE file.
