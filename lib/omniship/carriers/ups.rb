@@ -138,7 +138,7 @@ module Omniship
       access_request   = build_access_request
       tracking_request = build_tracking_request(tracking_number, options)
       response         = commit(:track, save_request(access_request.gsub("\n", "") + tracking_request.gsub("\n", "")), options[:test])
-      # parse_tracking_response(response, options)
+      parse_tracking_response(response, options)
     end
 
     # Creating shipping functionality for UPS
@@ -610,97 +610,7 @@ module Omniship
     end
 
     def parse_tracking_response(response, options={})
-      xml = Nokogiri::XML(response)
-      success = response_success?(xml)
-      message = response_message(xml)
-
-      puts "response :" + xml.to_s
-
-      if success
-        tracking_number, origin, destination = nil
-        shipment_details = Hash.new
-
-        tracking_number = xml.xpath('/*/Shipment/Package/TrackingNumber').text
-        shipment_details[:tracking_number] = tracking_number
-
-        estimated_delivery_date = xml.xpath('/*/Shipment/ScheduledDeliveryDate').text
-        if !estimated_delivery_date.blank?
-          estimated_delivery_date = Date.strptime(estimated_delivery_date,'%Y%m%d')
-          shipment_details[:estimated_delivery_date] = estimated_delivery_date
-        else
-          reschedule_delivery_date = xml.xpath('/*/Shipment/Package/RescheduledDeliveryDate').text
-          if !reschedule_delivery_date.blank?
-            reschedule_delivery_date = Date.strptime(reschedule_delivery_date,'%Y%m%d')
-            shipment_details[:estimated_delivery_date] = reschedule_delivery_date
-          end
-        end
-
-        puts 'tracking_number: ' + tracking_number
-        puts 'estimated_delivery_date: ' + estimated_delivery_date.to_s
-
-        activities = []
-        xml.xpath('/*/Shipment/Package/Activity').each do |activity|
-          status_code = activity.xpath('Status/StatusCode').text
-          status_dsc = activity.xpath('Status/StatusType/Description').text
-          date = activity.xpath('Date').text
-          time = activity.xpath('Time').text
-          hour, minute, second = time.scan(/\d{2}/)
-          year, month, day = date[0..3], date[4..5], date[6..7]
-          date_time = Time.utc(year, month, day, hour, minute, second)
-          location =  activity.xpath('ActivityLocation/Address/City').text + ' ' + activity.xpath('ActivityLocation/Address/StateProvinceCode').text + ' ' + activity.xpath('ActivityLocation/Address/CountryCode').text
-          activities << {:status_code => status_code, :status_dsc => status_dsc, :date => date_time, :location => location}
-        end
-        shipment_details[:activities] = activities
-
-        #first_shipment = xml.gelements['/*/Shipment']
-        #first_package = first_shipment.elements['Package']
-        #tracking_number = first_shipment.get_text('ShipmentIdentificationNumber | Package/TrackingNumber').to_s
-
-        #origin, destination = %w{Shipper ShipTo}.map do |location|
-        #  location_from_address_node(first_shipment.elements["#{location}/Address"])
-        #end
-
-        #activities = first_package.get_elements('Activity')
-        #unless activities.empty?
-        #  shipment_events = activities.map do |activity|
-        #    description = activity.get_text('Status/StatusType/Description').to_s
-        #    zoneless_time = if (time = activity.get_text('Time')) &&
-        #                       (date = activity.get_text('Date'))
-        #      time, date = time.to_s, date.to_s
-        #      hour, minute, second = time.scan(/\d{2}/)
-        #      year, month, day = date[0..3], date[4..5], date[6..7]
-        #      Time.utc(year, month, day, hour, minute, second)
-        #    end
-        #    location = location_from_address_node(activity.elements['ActivityLocation/Address'])
-        #    ShipmentEvent.new(description, zoneless_time, location)
-        #  end
-        #
-        #  shipment_events = shipment_events.sort_by(&:time)
-        #
-        #  if origin
-        #    first_event = shipment_events[0]
-        #    same_country = origin.country_code(:alpha2) == first_event.location.country_code(:alpha2)
-        #    same_or_blank_city = first_event.location.city.blank? or first_event.location.city == origin.city
-        #    origin_event = ShipmentEvent.new(first_event.name, first_event.time, origin)
-        #    if same_country and same_or_blank_city
-        #      shipment_events[0] = origin_event
-        #    else
-        #      shipment_events.unshift(origin_event)
-        #    end
-        #  end
-        #  if shipment_events.last.name.downcase == 'delivered'
-        #    shipment_events[-1] = ShipmentEvent.new(shipment_events.last.name, shipment_events.last.time, destination)
-        #  end
-        #end
-      end
-      #TrackingResponse.new(success, message, Hash.from_xml(response).values.first,
-      #  :xml => response,
-      #  :request => last_request,
-      #  :shipment_events => shipment_events,
-      #  :origin => origin,
-      #  :destination => destination,
-      #  :tracking_number => tracking_number)
-      return shipment_details
+      Hash.from_xml(response)
     end
 
     def parse_events_response(response, options)
@@ -773,7 +683,7 @@ module Omniship
 
     def parse_ship_accept_response(response, options={})
       xml = Nokogiri::XML(response)
-      puts xml
+      log xml
       success = response_success?(xml)
       @response_text = {}
 
@@ -850,7 +760,7 @@ module Omniship
 
     def parse_ship_valid_address(response, options={})
       xml = Nokogiri::XML(response)
-      puts xml
+      log xml
       success = response_success?(xml)
       response_text = Array.new
       if success

@@ -1,0 +1,54 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://wwwcie.ups.com/ups.app/xml/Void
+    body:
+      encoding: UTF-8
+      string: <?xml version="1.0"?><AccessRequest>  <AccessLicenseNumber>FD0391730BAC7F28</AccessLicenseNumber>  <UserId>SuperPedestrian1</UserId>  <Password>84Hamilton</Password></AccessRequest><?xml
+        version="1.0"?><VoidShipmentRequest>  <Request>    <RequestAction>Void</RequestAction>  </Request>  <ExpandedVoidShipment>    <ShipmentIdentificationNumber/>    <TrackingNumber>1ZISDE016691676846</TrackingNumber>  </ExpandedVoidShipment></VoidShipmentRequest>
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 23 Mar 2017 01:47:55 GMT
+      Server:
+      - Apache
+      X-Frame-Options:
+      - SAMEORIGIN
+      Pragma:
+      - no-cache
+      Content-Length:
+      - '408'
+      X-Content-Type-Options:
+      - nosniff
+      Content-Type:
+      - application/xml
+    body:
+      encoding: UTF-8
+      string: |-
+        <?xml version="1.0"?><VoidShipmentResponse><Response><TransactionReference></TransactionReference><ResponseStatusCode>1</ResponseStatusCode><ResponseStatusDescription>Success</ResponseStatusDescription></Response><Status>
+        <StatusType>
+        <Code>1</Code>
+        <Description>Success</Description>
+        </StatusType>
+        <StatusCode>
+        <Code>1</Code>
+        <Description>Voided</Description>
+        </StatusCode>
+        </Status>
+        </VoidShipmentResponse>
+    http_version: 
+  recorded_at: Thu, 23 Mar 2017 01:47:55 GMT
+recorded_with: VCR 3.0.1

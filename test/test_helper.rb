@@ -1,4 +1,24 @@
 #!/usr/bin/env ruby
+
+if ENV['COVERAGE']
+  require 'coveralls'
+  require 'simplecov'
+
+  Coveralls.wear!
+
+  SimpleCov.start do
+    add_filter '_test.rb'
+
+    add_group 'Base', 'lib/omniship'
+    add_group 'Vendor Overrides', 'lib/vendor/**/*'
+  end
+end
+
+unless ENV['CI']
+  require 'dotenv'
+  Dotenv.load('.env.test')
+end
+
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 
 require 'rubygems'
@@ -10,6 +30,7 @@ rescue Bundler::BundlerError => e
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
+
 require 'rails/all'
 require 'minitest/autorun'
 require 'minitest/spec'
@@ -17,6 +38,14 @@ require 'minitest/reporters'
 require 'omniship'
 require 'mocha/setup'
 require 'pry-byebug'
+require 'vcr'
+require 'webmock/minitest'
+
+
+VCR.configure do |config|
+  config.cassette_library_dir = "test/vcr_cassettes"
+  config.hook_into :webmock
+end
 
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(:color => true)]
 
