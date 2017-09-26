@@ -596,13 +596,13 @@ module Omniship
           service_code = rated_shipment.xpath('Service/Code').text.to_s
           days_to_delivery = rated_shipment.xpath('GuaranteedDaysToDelivery').text.to_s.to_i
           delivery_date = days_to_delivery >= 1 ? days_to_delivery.days.from_now.strftime("%Y-%m-%d") : nil
-
           rate_estimates << RateEstimate.new(origin, destination, @@name,
                                              :service_code => service_code,
                                              :service_name => service_name_for(origin, service_code),
                                              :total_price => rated_shipment.xpath('TotalCharges/MonetaryValue').text.to_s.to_f,
                                              :currency => rated_shipment.xpath('TotalCharges/CurrencyCode').text.to_s,
                                              :packages => packages,
+                                             :delivery_date => delivery_date,
                                              :delivery_range => [delivery_date])
         end
       end

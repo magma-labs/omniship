@@ -10,19 +10,19 @@ class LocationTest < Minitest::Test
     assert_instance_of ::ActiveUtils::Country, @locations[:ottawa].country
     assert_equal 'CA', @locations[:ottawa].country_code(:alpha2)
   end
-  
+
   def test_location_from_strange_hash
     hash = {  :country => 'CA',
               :zip => '90210',
-              :territory_code => 'QC', 
+              :territory_code => 'QC',
               :town => 'Perth',
-              :address => '66 Gregory Ave.', 
+              :address => '66 Gregory Ave.',
               :phone => '515-555-1212',
               :fax_number => 'none to speak of',
               :address_type => :commercial
             }
     location = Address.from(hash)
-    
+
     assert_equal hash[:country], location.country_code(:alpha2)
     assert_equal hash[:zip], location.zip
     assert_equal hash[:territory_code], location.province
@@ -37,17 +37,17 @@ class LocationTest < Minitest::Test
     expected = "110 Laurier Avenue West Ottawa, ON, K1P 1J1 Canada"
     assert_equal expected, @locations[:ottawa].to_s
   end
-  
+
   def test_inspect
     expected = "110 Laurier Avenue West\nOttawa, ON, K1P 1J1\nCanada\nPhone: 1-613-580-2400\nFax: 1-613-580-2495"
     assert_equal expected, @locations[:ottawa].inspect
   end
-  
+
   def test_includes_name
     location = Address.from(:name => "Bob Bobsen")
     assert_equal "Bob Bobsen", location.name
   end
-  
+
   def test_name_is_nil_if_not_provided
     location = Address.from({})
     assert_nil location.name
