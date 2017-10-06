@@ -138,7 +138,7 @@ module Omniship
       access_request   = build_access_request
       tracking_request = build_tracking_request(tracking_number, options)
       response         = commit(:track, save_request(access_request.gsub("\n", "") + tracking_request.gsub("\n", "")), options[:test])
-      # parse_tracking_response(response, options)
+      parse_tracking_response(response, options)
     end
 
     # Creating shipping functionality for UPS
@@ -603,6 +603,7 @@ module Omniship
                                              :total_price => rated_shipment.xpath('TotalCharges/MonetaryValue').text.to_s.to_f,
                                              :currency => rated_shipment.xpath('TotalCharges/CurrencyCode').text.to_s,
                                              :packages => packages,
+                                             :delivery_date => delivery_date,
                                              :delivery_range => [delivery_date])
         end
       end
@@ -615,7 +616,6 @@ module Omniship
       message = response_message(xml)
 
       puts "response :" + xml.to_s
-
       if success
         tracking_number, origin, destination = nil
         shipment_details = Hash.new
@@ -828,9 +828,8 @@ module Omniship
         @response_text[:error_location_element_name] = xml.xpath('/*/Response/Error/ErrorLocation/ErrorLocationElementName').text
         @response_text[:error_location_attribute_name] = xml.xpath('/*/Response/Error/ErrorLocation/ErrorLocationAttributeName').text
         @response_text[:error_digest] = xml.xpath('/*/Response/Error/ErrorDigest').text
-        @response_text[:status_code] = xml.xpath('/*/Status/StatusCode/Code')
-        @response_text[:status_code_description] = xml.xpath('/*/Status/StatusCode/Description')
-
+        @response_text[:status_code] = xml.xpath('/*/Status/StatusCode/Code').text
+        @response_text[:status_code_description] = xml.xpath('/*/Status/StatusCode/Description').text
         xml.xpath('/*/PackageLevelResults').each do |result|
           package = {}
           package[:tracking_number] = result.at('TrackingNumber').text
