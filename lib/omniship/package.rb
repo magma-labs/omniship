@@ -1,10 +1,10 @@
 module Omniship #:nodoc:
   class Package
     include Quantified
-    
+
     cattr_accessor :default_options
     attr_reader :options,
-		            :value, 
+		            :value,
 								:currency
 
     # Package.new(100, [10, 20, 30], :units => :metric)
@@ -29,9 +29,9 @@ module Omniship #:nodoc:
       @cylinder
     end
     alias_method :tube?, :cylinder?
-    
+
     def gift?; @gift end
-    
+
     def ounces(options={})
       weight(options).in_ounces.amount
     end
@@ -65,7 +65,7 @@ module Omniship #:nodoc:
       measurement.nil? ? @centimetres : measure(measurement, @centimetres)
     end
     alias_method :cm, :centimetres
-    
+
     def weight(options = {})
       case options[:type]
       when nil, :actual
@@ -80,7 +80,7 @@ module Omniship #:nodoc:
       end
     end
     alias_method :mass, :weight
-    
+
     def self.cents_from(money)
       return nil if money.nil?
       if money.respond_to?(:cents)
@@ -98,7 +98,7 @@ module Omniship #:nodoc:
     end
 
     private
-    
+
     def attribute_from_metric_or_imperial(obj, klass, metric_unit, imperial_unit)
       if obj.is_a?(klass)
         return value
@@ -148,7 +148,7 @@ module Omniship #:nodoc:
 
     def measure(measurement, ary)
       case measurement
-      when Fixnum then ary[measurement] 
+      when Fixnum then ary[measurement]
       when :x, :max, :length, :long then ary[2]
       when :y, :mid, :width, :wide then ary[1]
       when :z, :min, :height,:depth,:high,:deep then ary[0]

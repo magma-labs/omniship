@@ -73,8 +73,8 @@ module Omniship
     mattr_reader :packages, :locations
 
     @@packages = {
-      :just_ounces => Package.new(16, nil, :units => :imperial),
-      :just_grams => Package.new(1000, nil),
+      :just_ounces => Package.new(16, [], :units => :imperial),
+      :just_grams => Package.new(1000, []),
       :all_imperial => Package.new(16, [1,8,12], :units => :imperial),
       :all_metric => Package.new(1000, [2,20,40]),
       :book => Package.new(250, [14, 19, 2]),

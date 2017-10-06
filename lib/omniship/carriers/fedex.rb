@@ -449,13 +449,15 @@ module Omniship
       message = response_message(xml)
 
       xml.xpath('//RateReplyDetails').each do |rate|
+        delivery_date = rate.xpath('DeliveryTimestamp').text
         rate_estimates << RateEstimate.new(origin, destination, @@name,
                           :service_code     => rate.xpath('ServiceType').text,
                           :service_name     => rate.xpath('AppliedOptions').text == "SATURDAY_DELIVERY" ? "#{self.class.service_name_for_code(rate.xpath('ServiceType').text + '_SATURDAY_DELIVERY')}".upcase : self.class.service_name_for_code(rate.xpath('ServiceType').text),
                           :total_price      => rate.xpath('RatedShipmentDetails').first.xpath('ShipmentRateDetail/TotalNetCharge/Amount').text.to_f,
                           :currency         => handle_uk_currency(rate.xpath('RatedShipmentDetails').first.xpath('ShipmentRateDetail/TotalNetCharge/Currency').text),
                           :packages         => packages,
-                          :delivery_date    => rate.xpath('ServiceType').text == "FEDEX_GROUND" ? rate.xpath('TransitTime').text : rate.xpath('DeliveryTimestamp').text
+                          :delivery_date    => delivery_date,
+                          :delivery_range   => [delivery_date]
                           )
       end
 
@@ -463,7 +465,6 @@ module Omniship
         success = false
         message = "No shipping rates could be found for the destination address" if message.blank?
       end
-
       RateResponse.new(success, message, Hash.from_xml(response), :rates => rate_estimates, :xml => response, :request => last_request, :log_xml => options[:log_xml])
     end
 
@@ -546,7 +547,7 @@ module Omniship
     end
 
     def response_success?(xml)
-      %w{SUCCESS WARNING NOTE}.include? xml.xpath('//Notifications/Severity').text
+      (%w{SUCCESS WARNING NOTE} & xml.xpath('//Notifications/Severity').map(&:text)).any?
     end
 
     def response_message(xml)
